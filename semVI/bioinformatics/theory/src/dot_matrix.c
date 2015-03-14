@@ -2,26 +2,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
-
-#define INCR_SIZE 100
-
-/* Read a string of arbitrary length from the terminal */
-char *read_sequence()
-{
-    int c, i = 0, curr_size = 100;
-    char *sequence = (char *) malloc(curr_size);
-    do {
-        c = getchar();
-        sequence[i++] = c;
-        if (i > 99) {
-            curr_size += INCR_SIZE;
-            realloc(sequence, curr_size);
-        }
-    } while (c != '\n');
-    sequence[--i] = '\0';
-
-    return sequence;
-}
+#include "helpers.h"
 
 /* Creates a dot-plot matrix of the read sequences */
 char **create_dot_matrix(char *first_seq, char *second_seq, uint32_t length)
