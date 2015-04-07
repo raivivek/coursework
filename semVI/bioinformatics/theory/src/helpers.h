@@ -1,5 +1,6 @@
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <ctype.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdint.h>
@@ -21,7 +22,7 @@ char *read_sequence()
         sequence[i++] = c;
         if (i > 99) {
             curr_size += INCR_SIZE;
-            realloc(sequence, curr_size);
+            sequence = (char *) realloc(sequence, curr_size);
         }
     } while (c != '\n');
     sequence[--i] = '\0';

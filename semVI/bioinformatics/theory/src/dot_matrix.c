@@ -35,7 +35,7 @@ char **create_dot_matrix(char *first_seq, char *second_seq, uint32_t length)
 void print_matrix(char **matrix, uint32_t length)
 {
     printf("\n");
-    for(uint32_t i = 0; i < length; ++i) {
+    for(uint32_t i = 0; i <= length; ++i) {
         printf("%s\n", matrix[i]);
     }
 }
@@ -86,6 +86,8 @@ int main(int argc, char *argv[])
     print_matrix(matrix, first_len);
     print_alignment(alignment(matrix, first_len), first_seq, second_seq);
 
+    for(int i = 0; i <= second_len; i++)
+        free(matrix[i]);
     free(matrix);
     free(first_seq);
     free(second_seq);

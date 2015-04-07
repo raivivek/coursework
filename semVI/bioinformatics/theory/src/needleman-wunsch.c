@@ -45,11 +45,6 @@ void solve_matrix(int **matrix, char *first_seq, char *second_seq,
     }
 }
 
-bool assert_valid(int i, int j) {
-    puts("here");
-    return (i >= 0 && j >= 0);
-}
-
 /* Pretty prints the alignment using the solved matrix */
 void print_alignment(int **matrix, char *first_seq, char *second_seq)
 {
@@ -101,6 +96,10 @@ void print_alignment(int **matrix, char *first_seq, char *second_seq)
     puts(f_align);
     printf("%s\n", midline);
     puts(s_align);
+
+    free(f_align);
+    free(midline);
+    free(s_align);
 }
 
 void print_matrix(int **matrix, int column, int row)
@@ -139,6 +138,9 @@ int main(int argc, char *argv[])
 
     print_alignment(matrix, first_seq, second_seq);
 
+    /* Free memory */
+    for(int i = 0; i <= second_len; i++)
+        free(matrix[i]);
     free(matrix);
     free(first_seq);
     free(second_seq);
