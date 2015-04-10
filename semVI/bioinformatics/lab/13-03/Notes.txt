@@ -1,0 +1,42 @@
+Phylogeny?
+==========
+
+The study of evolutionary relationship.
+
+All the organisms on earth have descended from a common
+ancestor, which means that set of species, extant or extinct,
+is related.
+
+This relationship is Phylogeny, and the study of existing
+organisms' morphological, physiological, and molecular characteristics
+to create a tree -- is called Phylogenetics.
+
+Molecular Phylogenetics uses the structure and function of the molecule
+and how they change over the time to infer relationships.
+
+Phylogenetic analysis is the process of testing hypotheses about the
+descent of species from a common ancestor.
+
+The null hypothesis in most cases is that the organisms have a common
+ancestor (it is because it is natural to accept the fact that any two
+organism must have been related)
+
+Today?
+======
+
+16s rRNA Analysis to determine the relationship of an unknown sequence.
+
+We get the unknown sequence and BLAST it against three databases (NCBI,
+RDP, Ez Taxon). We take the first five results from all three blasts
+and put it in single file. We also add a sequence from Archeabacteria
+to act as a negative control.
+
+We then use MEGA to generate tree.
+
+By,
+
+Vivek Rai
+
+12BT30025
+
+Department of Biotechnology
