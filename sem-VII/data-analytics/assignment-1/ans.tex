@@ -1,0 +1,120 @@
+\documentclass[a4]{article}
+\usepackage{listings}
+
+
+%opening
+\title{Assignment 01}
+\author{Vivek Rai, 12BT30025}
+
+\begin{document}
+\lstset{language=SQL}
+\maketitle
+
+\section{SQL Queries}
+\subsection{Ans}
+\begin{lstlisting}
+SELECT product.pid, product.name
+FROM product, inventory
+WHERE product.pid = inventory.pid AND inventory.stock < 5;
+\end{lstlisting}
+
+\subsection{Ans}
+\begin{lstlisting}
+SELECT DISTINCT supplier.sid, supplier.name
+FROM supplies
+JOIN manufactures USING(pid)
+JOIN supplier USING(sid)
+JOIN manufacturer USING(mid)
+WHERE manufacture.name = 'manufacturer_2';
+\end{lstlisting}
+
+\subsection{Ans}
+\begin{lstlisting}
+SELECT product.pid, name, inventory.stock
+FROM product, inventory
+WHERE product.pid = inventory.pid
+ORDER BY stock DESC;
+\end{lstlisting}
+
+\subsection{Ans}
+\begin{lstlisting}
+SELECT pid, name, COUNT(*) as `num`
+FROM product
+JOIN supplies USING(pid)
+GROUP BY pid HAVING num = 1;
+\end{lstlisting}
+
+\subsection{Ans}
+\begin{lstlisting}
+SELECT pid, product.name
+FROM product
+JOIN inventory USING(pid) 
+WHERE stock = (SELECT MIN(stock) FROM inventory);
+\end{lstlisting}
+
+\subsection{Ans}
+\begin{lstlisting}
+SELECT sid, name, COUNT(*) as `product_supplied`
+FROM supplier
+JOIN supplies USING (sid)
+GROUP BY sid;
+\end{lstlisting}
+
+\subsection{Ans}
+\begin{lstlisting}
+SELECT manufactures.mid, manufacturer.name, AVG(min_age)
+FROM manufactures
+JOIN product USING(pid)
+JOIN manufacturer USING(mid)
+GROUP BY mid 
+ORDER BY min_age DESC
+LIMIT 1;
+\end{lstlisting}
+
+\subsection{Ans}
+\textbf{Which manufacturer has highest throughout?}
+\begin{lstlisting}
+SELECT mid, name, COUNT(*) AS `products_produced`
+FROM manufacturer
+JOIN manufactures USING(mid)
+GROUP BY mid
+ORDER BY `products_produced` DESC
+LIMIT 1;
+\end{lstlisting}
+
+\section{Integrity Constraint}
+
+\subsection{Ans}
+
+After specifying primary keys for the tables, adding further values requires 
+the value corresponding to primary key to be unique, else the operation is 
+rejected.
+
+For example, if we try to insert into \textup{product} table, a new tuple with
+pre-existing \textup{pid} but new \textup{name} or \textup{min\_age}, it will 
+be 
+rejected. Without this constraint,however, it will be added perfectly to the 
+table.
+
+\subsection{Ans}
+MySQL database schema when used with foreign keys, allows \textit{referential 
+integrity}. It provides a flexible way of reducing data duplication, prevent 
+changes from happening or propagating changes across different tables with 
+minimum action.
+
+In case we specify a foreign key relation between two tables, and try to 
+perform a \textbf{INSERT} or \textbf{UPDATE} operation on the child table 
+corresponding to which there is no entry in parent table, the operation is 
+rejected. For example, the situation of inserting a product in inventory table
+corresponding to which no entry exists in Product table.
+
+This obviously depends on the parent-child relation and the way foreign-key 
+constraints are specified. In case a match is found, further behavior is 
+controlled by a different set of constraints, \textbf{CASCADE}, 
+\textbf{RESTRICT}, for example.
+
+Not having these constraints will allow different inconvenient situations where 
+we have data duplication, manual effort of adding/updating data to each table 
+and ensuring that they are correct etc.,
+
+\end{document}

@@ -1,0 +1,20 @@
+
+ *** Please enter one of the following comands *** 
+> list
+> list <age>
+> describe <pid>
+> inventory <pid>
+> suppliers <pid>
+> manufacturer <pid>
+> place_order <pid> <client> <quantity>
+> list_orders <pid>
+> quit
+> pid: 666 name: p_666 name min_age: 16
+
+> pid: 37 stock: 34
+
+> sid: 147 name: supplier_147
+sid: 336 name: supplier_336
+sid: 487 name: supplier_487
+> mid: 80 name: manufacturer_80
+> 
