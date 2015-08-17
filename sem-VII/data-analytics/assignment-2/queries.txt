@@ -1,0 +1,144 @@
+!! Assignment 2
+!! Vivek Rai
+!! 12BT30025
+
+
+! Creating the table
+
+CREATE TABLE passengers (
+    class INT,
+    survived BOOL,
+    name VARCHAR(255),
+    sex ENUM('male', 'female'),
+    age INT,
+    sibsp INT,
+    parch INT,
+    ticket VARCHAR(255),
+    fare FLOAT,
+    cabin VARCHAR(127),
+    embarked CHAR,
+    boat VARCHAR(10),
+    body INT,
+    destination VARCHAR(255),
+    PRIMARY KEY (name, ticket)
+);
+
+! View schema
+
+DESCRIBE passengers;
+
+! Import data
+
+LOAD DATA INFILE '/var/tmp/titanic.csv' INTO TABLE passengers
+TERMINATED BY ',' ENCLOSED BY '"'
+IGNORE 1 LINES;
+
+! Observations
+
+Total people = 1309
+SELECT COUNT(*) FROM passengers;
+=> 1309
+
+Female = 466
+SELECT COUNT(*) FROM passengers WHERE sex='f';
+=> 466
+
+Male = 843
+SELECT COUNT(*) FROM passengers WHERE sex='m';
+=> 843
+
+* Women were more likely to be saved in Titanic disaster
+
+    SELECT COUNT(*) FROM passengers WHERE sex='f' AND survived=1
+    => 399
+    SELECT COUNT(*) FROM passengers WHERE sex='m' AND survived=1
+    => 161
+
+    That is, 86% female vs 19% male survived. Interestingly, the
+    ratio of male to female before boarding was 1.85 which reduced
+    to 0.40 in survivors.
+
+* While it may seem that this undue bias of saving females over male
+  should not reflect among the children, an analysis of the data suggests
+  that this bias prevailed even with the kids younger than 10 years.
+
+    SELECT COUNT(*) FROM passengers WHERE age < 10;
+    => 345
+    SELECT COUNT(*) FROM passengers WHERE age < 10 AND sex = 'm';
+    => 228
+    SELECT COUNT(*) FROM passengers WHERE age < 10 AND sex = 'f';
+    => 117
+    SELECT COUNT(*) FROM passengers WHERE age < 10 AND survived = 1;
+    => 123
+    SELECT COUNT(*) FROM passengers WHERE sex='f' AND age < 10 AND survived=1;
+    => 72
+    SELECT COUNT(*) FROM passengers WHERE sex='m' AND age < 10 AND survived=1;
+    => 58
+
+* Women with sibling/spouse were as likely to die in the disaster as those
+  who did not have any spouse/sibling.
+
+    SELECT COUNT(*) FROM passengers WHERE sex='f' and sibsp > 0;
+    => 204
+    SELECT COUNT(*) FROM passengers WHERE sex='f' and sibsp = 0;
+    => 262
+    SELECT COUNT(*) FROM passengers WHERE sex='f' and sibsp = 0 and survived = 1;
+    => 197
+
+    SELECT COUNT(*) FROM passengers WHERE sex='f' and sibsp > 0 and survived = 1;
+    => 142
+
+    On doing a Chi-square goodness of fit test with null hypothesis that both
+    are equally like to die, we safely say (with significant statistical
+    confidence) that having a spouse or sibling did was independent to getting
+    saved.
+
+* An interesting analysis will be to observe the distribution of survivors across
+  different classes of people that boarded Titanic.
+
+    SELECT class, COUNT(*) FROM passengers GROUP BY class;
+    =>
+    +-------+----------+
+    | class | COUNT(*) |
+    +-------+----------+
+    |     1 |      323 |
+    |     2 |      277 |
+    |     3 |      709 |
+    +-------+----------+
+    SELECT class, survived, COUNT(*) FROM passengers GROUP BY class, survived HAVING survived = 1;
+    =>
+    +-------+----------+----------+
+    | class | survived | COUNT(*) |
+    +-------+----------+----------+
+    |     1 |        1 |      200 |
+    |     2 |        1 |      119 |
+    |     3 |        1 |      181 |
+    +-------+----------+----------+
+    SELECT class, survived, COUNT(*) FROM passengers GROUP BY class, survived HAVING survived = 0;
+    =>
+    +-------+----------+----------+
+    | class | survived | COUNT(*) |
+    +-------+----------+----------+
+    |     1 |        0 |      123 |
+    |     2 |        0 |      158 |
+    |     3 |        0 |      528 |
+    +-------+----------+----------+
+
+    Clearly, we can see that traveling as a boarder of third class category,
+    one had a reduced likelihood of survival in the disaster. A further gender
+    analysis can be done on the three classes as well.
+
+* We can also try to see if age had any role to play in likelihood of survival.
+  That is, more younger people were saved than older people. This is intuitive because
+  it's a popular philosophical problem of saving a young life versus an old life
+  and in an isolated experiment, people are more likely to save a younger person
+  than older one. However, several factors like wealth, class can also affect this.
+
+  A good way to examine this is to obtain obtain the number of people boarded
+  versus survived for every age and examine any significant shift in the mean.
+
+  Relevant queries are:
+
+    SELECT age, COUNT(*) FROM passengers GROUP BY age;
+
+    SELECT age, survived, COUNT(*) FROM passengers GROUP BY age HAVING survived = 1;
